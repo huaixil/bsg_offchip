@@ -38,7 +38,7 @@ module bsg_link_ddr_upstream
   // Number of IO pins per physical IO channels
   ,parameter channel_width_p = 8
   // Number of physical IO channels
-  ,parameter num_channels_p  = 1
+  ,parameter num_channels_p  = 2
   // Receive fifo depth 
   // MUST MATCH paired bsg_link_ddr_downstream setting
   // Default value comes from child module
@@ -55,30 +55,30 @@ module bsg_link_ddr_upstream
   // Set use_extra_data_bit_p=1 to utilize this extra bit
   // MUST MATCH paired bsg_link_ddr_downstream setting
   ,parameter use_extra_data_bit_p = 0
-  ,localparam ddr_width_lp  = channel_width_p*2 + use_extra_data_bit_p
-  ,localparam piso_ratio_lp = width_p/(ddr_width_lp*num_channels_p)
   )
 
   (// Core side
-   input core_clk_i
-  ,input core_link_reset_i
-
-  ,input [width_p-1:0] core_data_i
-  ,input               core_valid_i
-  ,output              core_ready_o  
+   input core_clk_i,
+   input core_link_reset_i,
+   input [width_p-1:0] core_data_i,
+   input               core_valid_i,
+   output              core_ready_o,  
   
   // Physical IO side
-  ,input io_clk_i
-  ,input io_link_reset_i
-  ,input async_token_reset_i
-  
-  ,output logic [num_channels_p-1:0]                      io_clk_r_o
-  ,output logic [num_channels_p-1:0][channel_width_p-1:0] io_data_r_o
-  ,output logic [num_channels_p-1:0]                      io_valid_r_o
-  ,input        [num_channels_p-1:0]                      token_clk_i
+   input io_clk_i,
+   input io_link_reset_i,
+   input async_token_reset_i,
+   
+   output logic [num_channels_p-1:0]                      io_clk_r_o,
+   output [num_channels_p-1:0][channel_width_p-1:0] io_data_r_o,
+   output logic [num_channels_p-1:0]                      io_valid_r_o,
+   input        [num_channels_p-1:0]                      token_clk_i
   );
   
-  
+  localparam ddr_width_lp  = channel_width_p*2 + use_extra_data_bit_p;
+  localparam piso_ratio_lp = width_p/(ddr_width_lp*num_channels_p);
+
+  logic [num_channels_p-1:0][channel_width_p-1:0] io_data_r_o;
   logic core_piso_valid_lo, core_piso_yumi_li;
   logic [num_channels_p-1:0][ddr_width_lp-1:0] core_piso_data_lo;
 
