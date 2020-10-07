@@ -1,0 +1,10 @@
+### My Design Filelist
+# Macros
+# Parameters
+-pvalue+width_p=64
+# Search paths
++incdir+$INCLUDE_DIR/
+# Files
+$SRC_DIR/upstream/bsg_link_ddr_upstream.v
+$SRC_DIR/upstream/bsg_link_source_sync_upstream.v
+$SRC_DIR/upstream/bsg_link_oddr_phy.v
