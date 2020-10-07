@@ -1,0 +1,12 @@
+{
+    "instructions": [
+      {
+        "instruction" : "DATA_IN",
+        "start condition": ["$decode$", "(m1.out_piso.ready_and_o == 1)"],
+        "ready bound" : 1
+      }
+    ],
+    
+    "global invariants": []
+  
+  }

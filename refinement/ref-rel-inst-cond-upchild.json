@@ -1,0 +1,27 @@
+
+{
+    "instructions": [
+      {
+        "instruction" : "Output0_p",
+        "ready bound" : 9
+      },
+
+      {
+        "instruction" : "Output0_n",
+        "ready bound" : 10
+      },
+
+      {
+        "instruction" : "Output1_p",
+        "ready bound" : 9
+      },
+
+      {
+        "instruction" : "Output1_n",
+        "ready bound" : 10
+      }
+    ],
+    
+    "global invariants": []
+  
+  }

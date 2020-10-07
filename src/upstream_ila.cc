@@ -9,8 +9,10 @@ BSG_UPSTREAM::BSG_UPSTREAM()
       model("BSG_UPSTREAM"),
     
     // Input
+    core_clk      (model.NewBvInput("core_clk", 1)),
     core_data_in  (model.NewBvInput("core_data_in", CORE_WIDTH)),
     core_valid_in (model.NewBvInput("core_valid_in", 1)),
+    io_ready      (model.NewBvInput("io_ready", 1)),
 
     // Output
     io_valid_out (model.NewBvState("io_valid_out", 1)),
@@ -23,11 +25,12 @@ BSG_UPSTREAM::BSG_UPSTREAM()
     for (int i = 0; i < CHANNEL_NUM; i++){
         io_data_out.push_back(model.NewBvState("io_data_out_ch" + std::to_string(i), CHANNEL_WIDTH));
     }
+    model.SetValid( /*always true*/ BoolConst(true) );
 
     // ------- Instruction ------ //
     {
         auto instr = model.NewInstr("DATA_IN");
-        instr.SetDecode(core_valid_in == BvConst(1,1));
+        instr.SetDecode(core_valid_in == BvConst(1,1) & core_clk == BvConst(0,1)); 
         instr.SetUpdate(child_valid, BvConst(1,1));
         AddChild(instr);
     }

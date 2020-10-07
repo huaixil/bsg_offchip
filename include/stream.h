@@ -36,8 +36,10 @@ private:
   void AddChild(InstrRef& inst);
 
 protected:
+  ExprRef core_clk;
   ExprRef core_data_in;
   ExprRef core_valid_in;
+  ExprRef io_ready;
 
   // -------- Output ------- //
   std::vector<ExprRef> io_data_out;

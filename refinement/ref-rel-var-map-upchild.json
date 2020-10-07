@@ -1,0 +1,41 @@
+{
+    "models": { "ILA":"m0" , "VERILOG": "m1" },
+  
+    "state mapping": {
+        "io_valid_out"    : "m1.io_valid_r_o[0]",
+        "io_data_out_ch0" : "m1.io_data_r_o[7:0]",
+        "io_data_out_ch1" : "m1.io_data_r_o[15:8]",
+        "child_valid"     : "~m1.out_piso.ready_and_o",
+        "counter"         : "m1.out_piso.shift_ctr_r"
+    },
+  
+    "interface mapping": {
+       
+       "core_clk_i"           :           "core_clk" ,
+       "core_link_reset_i"    :           "**RESET**",
+       "core_data_i"          :           "**KEEP**",
+       "core_valid_i"         :           "**KEEP**",
+       "core_ready_o"         :           "**KEEP**",
+
+       "io_clk_i"             :           "**CLOCK**",
+       "io_link_reset_i"      :           "**RESET**",
+       "async_token_reset_i"  :           "**RESET**",
+       
+       "io_clk_r_o"           :           "**KEEP**",
+       "io_data_r_o"          :           "**SO**",
+       "io_valid_r_o"         :           "**SO**",
+
+       "token_clk_i"          :           "**KEEP**"
+    },
+  
+    "mapping control":[
+        "m0.core_data_in == m1.out_piso.fifo_data_lo",
+        "m0.io_ready == m1.ch_0_sso.io_credit_avail",
+        "m1.ch_0_sso.io_credit_avail & m1.ch_1_sso.io_credit_avail == 1"
+        
+    ],
+  
+    "assumptions" : [
+      ]
+  
+}
