@@ -17,6 +17,7 @@ $TOP_DIR/../bsg_offchip/verilog/upstream/bsg_mux.v
 $TOP_DIR/../bsg_offchip/verilog/upstream/bsg_dff_en.v			
 $TOP_DIR/../bsg_offchip/verilog/upstream/bsg_dff_reset.v
 $TOP_DIR/../bsg_offchip/verilog/upstream/bsg_counter_clear_up.v
+$TOP_DIR/../bsg_offchip/verilog/upstream/bsg_scan.v
 
 # BSG_mem	
 $TOP_DIR/../bsg_offchip/verilog/upstream/bsg_mem_1r1w_synth.v
