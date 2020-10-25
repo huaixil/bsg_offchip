@@ -2,8 +2,19 @@
     "instructions": [
       {
         "instruction" : "DATA_IN",
-        "start condition": ["$decode$", "(m1.out_piso.ready_and_o == 1)"],
+        "ready signal" : "m1.out_piso.shift_ctr_r",
+        "max bound": 50
+      },
+
+      {
+        "instruction" : "TOKEN_IN",
         "ready bound" : 1
+      },
+
+      {
+        "instruction" : "TOKEN_AND_DATA",
+        "ready signal" : "m1.out_piso.shift_ctr_r",
+        "max bound": 50
       }
     ],
     

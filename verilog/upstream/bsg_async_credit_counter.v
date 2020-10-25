@@ -126,7 +126,7 @@ module bsg_async_credit_counter #(parameter max_tokens_p = "inv"
    //
 
 
-   // synopsys translate_off
+   // // synopsys translate_off
 
    bsg_gray_to_binary #(.width_p(w_counter_width_lp)) bsg_g2b
      (.gray_i(w_counter_gray_r_rsync)
@@ -142,21 +142,21 @@ module bsg_async_credit_counter #(parameter max_tokens_p = "inv"
    always @(posedge r_clk_i)
      r_free_credits_r <= r_free_credits;
 
-   if (check_excess_credits_p)
-     always @(r_free_credits_r)
-       assert(r_reset_i
-              |  r_infinite_credits_i
-              | (r_free_credits_r <= (max_tokens_p << lg_credit_to_token_decimation_p)))
-              else $error("too many credits in credit counter %d (> %3d)"
-                          , r_free_credits_r
-                          , max_tokens_p << lg_credit_to_token_decimation_p
-                          );
+  //  if (check_excess_credits_p)
+  //    always @(r_free_credits_r)
+  //      assert(r_reset_i
+  //             |  r_infinite_credits_i
+  //             | (r_free_credits_r <= (  << lg_credit_to_token_decimation_p)))
+  //             else $error("too many credits in credit counter %d (> %3d)"
+  //                         , r_free_credits_r
+  //                         , max_tokens_p << lg_credit_to_token_decimation_p
+  //                         );
 
-   always @(negedge r_clk_i)
-       assert (!(r_dec_credit_i===1 && r_credits_avail_o===0))
-              else $error("decrementing empty credit counter");
+  //  always @(negedge r_clk_i)
+  //      assert (!(r_dec_credit_i===1 && r_credits_avail_o===0))
+  //             else $error("decrementing empty credit counter");
 
-   // synopsys translate_on
+   // // synopsys translate_on
 
    //
    // end debug

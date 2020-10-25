@@ -50,21 +50,21 @@ module bsg_scan #(parameter width_p = -1
 
    wire [width_p-1:0]                      fill;
 	
-   // synopsys translate_off
-   initial
-      assert( $countones({xor_p[0], and_p[0], or_p[0]}) == 1)
-        else $error("bsg_scan: only one function may be selected\n");
+  //  // synopsys translate_off
+  //  initial
+  //     assert( $countones({xor_p[0], and_p[0], or_p[0]}) == 1)
+  //       else $error("bsg_scan: only one function may be selected\n");
 	
-   if (debug_p)
-    always @(o)
-      begin
-        `BSG_HIDE_FROM_VERILATOR(#1)
-        for (integer k = 0; k <= $clog2(width_p); k=k+1)
-          $display("%b",t[k]);
-        $display("i=%b, o=%b",i, o);
-      end
+  //  if (debug_p)
+  //   always @(o)
+  //     begin
+  //       `BSG_HIDE_FROM_VERILATOR(#1)
+  //       for (integer k = 0; k <= $clog2(width_p); k=k+1)
+  //         $display("%b",t[k]);
+  //       $display("i=%b, o=%b",i, o);
+  //     end
 	
-   // synopsys translate_on
+   // // synopsys translate_on
 
    // streaming operation; reverses bits
    if (lo_to_hi_p)

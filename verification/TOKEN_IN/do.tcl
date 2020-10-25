@@ -20,10 +20,8 @@ assume -name additional_mapping_control_assume10 {m1.token_clk_i[0] == token_clk
 assume -name rfassumptions11 {m1.core_data_i == data_i}
 assume -name rfassumptions12 {m1.core_valid_i == valid_i}
 assume -name rfassumptions13 {sent_counter - finish_counter <= 7'b1000000}
-assume -name issue_decode14 {(~ __START__) || (__ILA_BSG_UPSTREAM_decode_of_DATA_IN__)}
+assume -name issue_decode14 {(~ __START__) || (__ILA_BSG_UPSTREAM_decode_of_TOKEN_IN__)}
 assume -name issue_valid15 {(~ __START__) || (__ILA_BSG_UPSTREAM_valid__)}
 assume -name post_value_holder16 {(~((__START__ || __STARTED__) && m1.out_piso.shift_ctr_r == 0) || ((data0) == (m1.out_piso.data_o)))}
 assume -name post_value_holder17 {(~(__CYCLE_CNT__ == 1) || ((finish_cnt_holder) == (finish_counter)))}
-assert -name variable_map_assert0 {(~ __IEND__) || (__m6__)}
-assert -name variable_map_assert1 {(~ __IEND__) || (__m7__)}
-assert -name variable_map_assert2 {(~ __IEND__) || (__m8__)}
+assert -name variable_map_assert0 {(~ __IEND__) || ((~ ((__START__) ) || (__m6__) )&&( ~ (~(__START__)&&(__IEND__) ) || (__m7__)))}

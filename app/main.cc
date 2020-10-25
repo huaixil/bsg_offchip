@@ -11,7 +11,7 @@ void verify_upstream(
    ) {
   VerilogGeneratorBase::VlgGenConfig vlg_cfg;
   vlg_cfg.pass_node_name = true;
-  //vtg_cfg.ForceInstCheckReset = true;
+  vtg_cfg.ForceInstCheckReset = true;
 
   std::string RootPath    = "..";
   std::string VerilogPath = RootPath    + "/verilog/";
@@ -128,7 +128,7 @@ int main() {
   BSG_UPSTREAM upstream_ila;
   BSG_DOWNSTREAM downstream_ila;
 
-  verify_upstream_child(upstream_ila.model, vtg_cfg, upstream_design_files);
+  //verify_upstream_child(upstream_ila.model, vtg_cfg, upstream_design_files);
   verify_upstream(upstream_ila.model, vtg_cfg, upstream_design_files);
   //verify_downstream(downstream_ila.model, vtg_cfg, downstream_design_files);
 

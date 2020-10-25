@@ -5,8 +5,89 @@
         "io_valid_out"    : "m1.io_valid_r_o[0]",
         "io_data_out_ch0" : "m1.io_data_r_o[7:0]",
         "io_data_out_ch1" : "m1.io_data_r_o[15:8]",
-        "child_valid"     : "~m1.out_piso.ready_and_o",
-        "counter"         : "m1.out_piso.shift_ctr_r"
+
+        "data_cycle_0"    : "#data#",
+        "data_cycle_1"    : "#data#",
+        "child_valid"     : [["__START__", "m1.ch_0_sso.io_async_fifo_valid"], ["__IEND__", "m1.ch_0_oddr_phy.ready_o"]],
+        "sent_cnt"        : "#sent_counter#",
+        "finish_cnt"      : "#finish_counter#",
+
+        "counter"         : [["__START__", "m1.ch_0_oddr_phy.odd_r"], ["__IEND__",  "#cnt_oddr#"]],
+        "commit"          : "#commit#",
+        "data_temp"       : "{m1.ch_1_oddr_phy.data_i_r[16:9], m1.ch_1_oddr_phy.data_i_r[7:0], 16'b0} + {m1.ch_0_oddr_phy.data_i_r[16:9], m1.ch_0_oddr_phy.data_i_r[7:0]}"
+    },
+
+    "value-holder" : {
+        "cnt_oddr" :{
+          "cond": "__CYCLE_CNT__ == 1",
+          "val" : "m1.ch_0_oddr_phy.odd_r",
+          "width": "auto"
+        }
+      },
+
+    "verilog-inline-monitors" : {
+        "cnt_data_record":{
+            "verilog": [
+                "assign sent_counter = m1.ch_0_sso.pos_credit_ctr.r_counter_r[5:0] + m1.ch_0_sso.neg_credit_ctr.r_counter_r[5:0] - 7'b1000000;",
+                "assign finish_counter = {(m1.ch_0_sso.pos_credit_ctr.w_counter_binary_r_rsync[3:0] + m1.ch_1_sso.neg_credit_ctr.w_counter_binary_r_rsync[3:0]),3'b000};",
+                "assign data = {m1.ch_1_sso.io_async_fifo_data[15:0], 16'b0} + m1.ch_0_sso.io_async_fifo_data[15:0];"
+            ],
+            "defs" :[
+                ["sent_counter", 7, "reg"],
+                ["finish_counter", 7, "reg"],
+                ["data", 32, "reg"]
+            ],
+            "refs" :[
+                "m1.ch_0_sso.pos_credit_ctr.r_counter_r",
+                "m1.ch_0_sso.neg_credit_ctr.r_counter_r",
+                "m1.ch_0_sso.pos_credit_ctr.w_counter_binary_r_rsync",
+                "m1.ch_0_sso.neg_credit_ctr.w_counter_binary_r_rsync",
+                "m1.ch_1_sso.io_async_fifo_data",
+                "m1.ch_0_sso.io_async_fifo_data"
+            ]
+        },
+
+        "token_record": {
+            "verilog": [
+                "always @(posedge __ILA_I_core_clk) begin",
+                "   if(rst) begin io_token <= 0; token_clk_i <= 0; end",
+                "   else if (random_token) begin",
+                "       io_token <= 1;",
+                "       token_clk_i <= ~token_clk_i;",
+                "   end",
+                "   else io_token <= 0;",
+                "end"
+            ],
+
+            "defs" : [
+                ["random_token", 1, "wire"],
+                ["io_token", 1, "reg"],
+                ["token_clk_i", 1 ,"reg"]
+            ],
+
+            "refs" : [
+
+            ]
+        },
+
+        "commit_stage":{
+            "verilog" :[
+                "always @(posedge clk) begin ",
+                "    if(m1.ch_0_oddr_phy.data_i[8] && m1.ch_0_oddr_phy.ready_o)",
+                "        commit <= 1;",
+                "    else if (commit && m1.ch_0_oddr_phy.ready_o)",
+                "        commit <= 0;",
+                "end" 
+            ],
+            "defs" : [
+                ["commit", 1, "reg"]
+            ],
+            "refs" : [
+                "m1.ch_0_oddr_phy.data_i[8]",
+                "m1.ch_0_oddr_phy.ready_o"
+            ]
+        }
+
     },
   
     "interface mapping": {
@@ -29,10 +110,8 @@
     },
   
     "mapping control":[
-        "m0.core_data_in == m1.out_piso.fifo_data_lo",
-        "m0.io_ready == m1.ch_0_sso.io_credit_avail",
-        "m1.ch_0_sso.io_credit_avail & m1.ch_1_sso.io_credit_avail == 1"
-        
+        "m0.io_token == #io_token#",
+        "m1.token_clk_i[0] == #token_clk_i# && m1.token_clk_i[1] == #token_clk_i#"
     ],
   
     "assumptions" : [

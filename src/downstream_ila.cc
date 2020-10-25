@@ -16,11 +16,11 @@ BSG_DOWNSTREAM::BSG_DOWNSTREAM()
     core_valid_out (model.NewBvState("core_valid_out", 1)),
 
     // Internal State
-    cnt (model.NewBvState("input_cnt", COUNTER_BIT)),
+    cnt (model.NewBvState("input_cnt", BUFFER_BIT)),
     data_temp (model.NewBvState("data_temp", CORE_WIDTH))
 
 {
-    model.AddInit(cnt == BvConst(0, COUNTER_BIT));
+    model.AddInit(cnt == BvConst(0, BUFFER_BIT));
     // Input
     for (int i = 0; i < CHANNEL_NUM; i++){
         io_data_in.push_back(model.NewBvInput("io_data_in_ch" + std::to_string(i), CHANNEL_WIDTH));
@@ -39,9 +39,9 @@ BSG_DOWNSTREAM::BSG_DOWNSTREAM()
                 io_data_in[i]);
         }
 
-        instr.SetUpdate(cnt, Ite(cnt == COUNTER_MAX, BvConst(0, COUNTER_BIT), cnt + BvConst(1, COUNTER_BIT) ) );
-        instr.SetUpdate(data_temp, Ite(cnt == COUNTER_MAX, BvConst(0, CORE_WIDTH), (data_temp << DATA_TEMP_WIDTH) + data_temp1 ));
-        instr.SetUpdate(core_data_out, Ite(cnt == COUNTER_MAX, (data_temp << DATA_TEMP_WIDTH) + data_temp1, core_data_out ));
-        instr.SetUpdate(core_valid_out, Ite(cnt == COUNTER_MAX, BvConst(1,1), core_valid_out));
+        instr.SetUpdate(cnt, Ite(cnt == BvConst(63, BUFFER_BIT), BvConst(0, BUFFER_BIT), cnt + BvConst(1, BUFFER_BIT) ) );
+        instr.SetUpdate(data_temp, Ite(cnt == BvConst(63, BUFFER_BIT), BvConst(0, CORE_WIDTH), (data_temp << DATA_TEMP_WIDTH) + data_temp1 ));
+        instr.SetUpdate(core_data_out, Ite(cnt == BvConst(63, BUFFER_BIT), (data_temp << DATA_TEMP_WIDTH) + data_temp1, core_data_out ));
+        instr.SetUpdate(core_valid_out, Ite(cnt == BvConst(63, BUFFER_BIT), BvConst(1,1), core_valid_out));
     }
 }

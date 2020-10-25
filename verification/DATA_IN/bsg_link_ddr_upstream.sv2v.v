@@ -734,12 +734,12 @@ module bsg_parallel_in_serial_out_width_p32_els_p2
   output valid_o;
   wire [31:0] data_o;
   wire ready_and_o,valid_o,N0,fifo0_ready_lo,fifo0_v_li,fifo_yumi_li,
-  \piso.wait_fifo1_r ,_0_net_,_1_net_,N1,_2_net_,N2,N3,N4,N5,N6,N7;
+  wait_fifo1_r ,_0_net_,_1_net_,N1,_2_net_,N2,N3,N4,N5,N6,N7;
   wire [63:0] fifo_data_lo;
-  wire [0:0] \piso.shift_ctr_r ;
+  wire shift_ctr_r ;
 
   bsg_two_fifo_width_p32
-  \two_fifo_fifo0 
+  two_fifo_fifo0 
   (
     .clk_i(clk_i),
     .reset_i(reset_i),
@@ -753,7 +753,7 @@ module bsg_parallel_in_serial_out_width_p32_els_p2
 
 
   bsg_one_fifo_width_p32
-  \piso_fifo1 
+  piso_fifo1 
   (
     .clk_i(clk_i),
     .reset_i(reset_i),
@@ -766,40 +766,40 @@ module bsg_parallel_in_serial_out_width_p32_els_p2
 
 
   bsg_dff_reset_set_clear_width_p1
-  \piso_twobuf_wait_fifo1_dff 
+  piso_twobuf_wait_fifo1_dff 
   (
     .clk_i(clk_i),
     .reset_i(reset_i),
     .set_i(_0_net_),
     .clear_i(_1_net_),
-    .data_o(\piso.wait_fifo1_r )
+    .data_o(wait_fifo1_r )
   );
 
-  assign N0 = \piso.shift_ctr_r [0] ^ 1'b1;
+  assign N0 = shift_ctr_r ^ 1'b1;
   assign N1 = ~N0;
 
   bsg_counter_clear_up_1_0
-  \piso_shift_ctr 
+  piso_shift_ctr 
   (
     .clk_i(clk_i),
     .reset_i(reset_i),
     .clear_i(fifo_yumi_li),
     .up_i(_2_net_),
-    .count_o(\piso.shift_ctr_r [0])
+    .count_o(shift_ctr_r)
   );
 
 
   bsg_mux_width_p32_els_p2
-  \piso_data_o_mux 
+  piso_data_o_mux 
   (
     .data_i(fifo_data_lo),
-    .sel_i(\piso.shift_ctr_r [0]),
+    .sel_i(shift_ctr_r),
     .data_o(data_o)
   );
 
   assign fifo0_v_li = valid_i & N2;
-  assign N2 = ~\piso.wait_fifo1_r ;
-  assign _1_net_ = \piso.wait_fifo1_r  & ready_and_o;
+  assign N2 = ~wait_fifo1_r ;
+  assign _1_net_ = wait_fifo1_r  & ready_and_o;
   assign _0_net_ = N3 & N4;
   assign N3 = N2 & valid_i;
   assign N4 = ~ready_and_o;
@@ -1713,7 +1713,7 @@ module bsg_launch_sync_sync_width_p4_use_negedge_for_launch_p0_use_async_reset_p
   wire [3:0] iclk_data_o,oclk_data_o;
 
   bsg_launch_sync_sync_posedge_4_unit
-  \sync_p_z_blss 
+  sync_p_z_blss 
   (
     .iclk_i(iclk_i),
     .iclk_reset_i(iclk_reset_i),
@@ -2048,7 +2048,7 @@ module bsg_launch_sync_sync_5_0_1
   wire [4:0] iclk_data_o,oclk_data_o;
 
   bsg_launch_sync_sync_async_reset_posedge_5_unit
-  \async_p_z_blss 
+  async_p_z_blss 
   (
     .iclk_i(iclk_i),
     .iclk_reset_i(iclk_reset_i),
@@ -2152,6 +2152,58 @@ endmodule
 
 
 
+module bsg_scan_width_p5_xor_p1
+(
+  i,
+  o
+);
+
+  input [4:0] i;
+  output [4:0] o;
+  wire [4:0] o;
+  wire t_2__4_,t_2__3_,t_2__2_,t_2__1_,t_2__0_,t_1__4_,t_1__3_,t_1__2_,t_1__1_,t_1__0_;
+  assign t_1__4_ = i[4] ^ 1'b0;
+  assign t_1__3_ = i[3] ^ i[4];
+  assign t_1__2_ = i[2] ^ i[3];
+  assign t_1__1_ = i[1] ^ i[2];
+  assign t_1__0_ = i[0] ^ i[1];
+  assign t_2__4_ = t_1__4_ ^ 1'b0;
+  assign t_2__3_ = t_1__3_ ^ 1'b0;
+  assign t_2__2_ = t_1__2_ ^ t_1__4_;
+  assign t_2__1_ = t_1__1_ ^ t_1__3_;
+  assign t_2__0_ = t_1__0_ ^ t_1__2_;
+  assign o[4] = t_2__4_ ^ 1'b0;
+  assign o[3] = t_2__3_ ^ 1'b0;
+  assign o[2] = t_2__2_ ^ 1'b0;
+  assign o[1] = t_2__1_ ^ 1'b0;
+  assign o[0] = t_2__0_ ^ t_2__4_;
+
+endmodule
+
+
+
+module bsg_gray_to_binary_width_p5
+(
+  gray_i,
+  binary_o
+);
+
+  input [4:0] gray_i;
+  output [4:0] binary_o;
+  wire [4:0] binary_o;
+
+  bsg_scan_width_p5_xor_p1
+  scan_xor
+  (
+    .i(gray_i),
+    .o(binary_o)
+  );
+
+
+endmodule
+
+
+
 module bsg_async_credit_counter_4_3_0_2_1_1
 (
   w_clk_i,
@@ -2175,7 +2227,7 @@ module bsg_async_credit_counter_4_3_0_2_1_1
   wire r_credits_avail_o,N0,N1,N2,N3,N4,N5,N6,N7,N8,r_counter_r_lo_bits_nonzero,N9,N10,
   N11,sv2v_dc_1,sv2v_dc_2,sv2v_dc_3,sv2v_dc_4,sv2v_dc_5;
   wire [7:0] r_counter_r;
-  wire [4:0] w_counter_gray_r,w_counter_gray_r_rsync;
+  wire [4:0] w_counter_gray_r,w_counter_gray_r_rsync,w_counter_binary_r_rsync;
   wire [3:0] r_counter_r_hi_bits_gray;
   reg r_counter_r_7_sv2v_reg,r_counter_r_6_sv2v_reg,r_counter_r_5_sv2v_reg,
   r_counter_r_4_sv2v_reg,r_counter_r_3_sv2v_reg,r_counter_r_2_sv2v_reg,
@@ -2202,6 +2254,14 @@ module bsg_async_credit_counter_4_3_0_2_1_1
   );
 
   assign N9 = { r_counter_r[7:7], r_counter_r_hi_bits_gray } != w_counter_gray_r_rsync;
+
+  bsg_gray_to_binary_width_p5
+  bsg_g2b
+  (
+    .gray_i(w_counter_gray_r_rsync),
+    .binary_o(w_counter_binary_r_rsync)
+  );
+
   assign { N8, N7, N6, N5, N4, N3, N2, N1 } = r_counter_r + r_dec_credit_i;
   assign N0 = ~r_reset_i;
   assign r_counter_r_lo_bits_nonzero = N10 | r_counter_r[0];
@@ -2347,7 +2407,7 @@ module bsg_launch_sync_sync_5_1_1
   wire [4:0] iclk_data_o,oclk_data_o;
 
   bsg_launch_sync_sync_async_reset_negedge_5_unit
-  \async_n_z_blss 
+  async_n_z_blss 
   (
     .iclk_i(iclk_i),
     .iclk_reset_i(iclk_reset_i),
@@ -2475,7 +2535,7 @@ module bsg_async_credit_counter_4_3_1_2_1_1
   wire r_credits_avail_o,N0,N1,N2,N3,N4,N5,N6,N7,N8,r_counter_r_lo_bits_nonzero,N9,N10,
   N11,sv2v_dc_1,sv2v_dc_2,sv2v_dc_3,sv2v_dc_4,sv2v_dc_5;
   wire [7:0] r_counter_r;
-  wire [4:0] w_counter_gray_r,w_counter_gray_r_rsync;
+  wire [4:0] w_counter_gray_r,w_counter_gray_r_rsync,w_counter_binary_r_rsync;
   wire [3:0] r_counter_r_hi_bits_gray;
   reg r_counter_r_7_sv2v_reg,r_counter_r_6_sv2v_reg,r_counter_r_5_sv2v_reg,
   r_counter_r_4_sv2v_reg,r_counter_r_3_sv2v_reg,r_counter_r_2_sv2v_reg,
@@ -2502,6 +2562,14 @@ module bsg_async_credit_counter_4_3_1_2_1_1
   );
 
   assign N9 = { r_counter_r[7:7], r_counter_r_hi_bits_gray } != w_counter_gray_r_rsync;
+
+  bsg_gray_to_binary_width_p5
+  bsg_g2b
+  (
+    .gray_i(w_counter_gray_r_rsync),
+    .binary_o(w_counter_binary_r_rsync)
+  );
+
   assign { N8, N7, N6, N5, N4, N3, N2, N1 } = r_counter_r + r_dec_credit_i;
   assign N0 = ~r_reset_i;
   assign r_counter_r_lo_bits_nonzero = N10 | r_counter_r[0];
@@ -2850,7 +2918,7 @@ module bsg_link_ddr_upstream
 
 
   bsg_link_source_sync_upstream_channel_width_p16_lg_fifo_depth_p6_lg_credit_to_token_decimation_p3
-  \ch_0_sso 
+  ch_0_sso 
   (
     .core_clk_i(core_clk_i),
     .core_link_reset_i(core_link_reset_i),
@@ -2868,7 +2936,7 @@ module bsg_link_ddr_upstream
 
 
   bsg_link_oddr_phy_width_p9
-  \ch_0_oddr_phy 
+  ch_0_oddr_phy 
   (
     .reset_i(io_link_reset_i),
     .clk_i(io_clk_i),
@@ -2880,7 +2948,7 @@ module bsg_link_ddr_upstream
 
 
   bsg_link_source_sync_upstream_channel_width_p16_lg_fifo_depth_p6_lg_credit_to_token_decimation_p3
-  \ch_1_sso 
+  ch_1_sso 
   (
     .core_clk_i(core_clk_i),
     .core_link_reset_i(core_link_reset_i),
@@ -2898,7 +2966,7 @@ module bsg_link_ddr_upstream
 
 
   bsg_link_oddr_phy_width_p9
-  \ch_1_oddr_phy 
+  ch_1_oddr_phy 
   (
     .reset_i(io_link_reset_i),
     .clk_i(io_clk_i),

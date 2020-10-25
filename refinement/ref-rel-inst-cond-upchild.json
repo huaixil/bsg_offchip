@@ -3,22 +3,22 @@
     "instructions": [
       {
         "instruction" : "Output0_p",
-        "ready bound" : 9
+        "ready bound" : 2
       },
 
       {
         "instruction" : "Output0_n",
-        "ready bound" : 10
+        "ready bound" : 2
       },
 
       {
         "instruction" : "Output1_p",
-        "ready bound" : 9
+        "ready bound" : 2
       },
 
       {
         "instruction" : "Output1_n",
-        "ready bound" : 10
+        "ready bound" : 2
       }
     ],
     

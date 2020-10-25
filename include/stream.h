@@ -15,8 +15,9 @@ using namespace ilang;
 #define CHANNEL_NUM     2
 #define CHANNEL_WIDTH   8
 #define DATA_TEMP_WIDTH 16 // 2*8
-#define COUNTER_BIT     1
-#define COUNTER_MAX     BvConst(1, COUNTER_BIT)
+
+#define BUFFER_SIZE     64
+#define BUFFER_BIT      6
 
 #define b0 BoolConst(false)
 #define b1 BoolConst(true)
@@ -39,12 +40,18 @@ protected:
   ExprRef core_clk;
   ExprRef core_data_in;
   ExprRef core_valid_in;
-  ExprRef io_ready;
+  ExprRef io_token;
 
-  // -------- Output ------- //
+  // ---------- Output --------- //
   std::vector<ExprRef> io_data_out;
   ExprRef io_valid_out;
+
+  // --------- Internal --------//
+  ExprRef data_cycle_0;
+  ExprRef data_cycle_1;
   ExprRef child_valid;
+  ExprRef sent_cnt;
+  ExprRef finish_cnt;
   
 }; // class BSG_UPSTREAM
 
