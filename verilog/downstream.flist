@@ -1,0 +1,37 @@
+### My Design Filelist
+# Macros
+# Parameters
+-pvalue+width_p=64
+# Search paths
++incdir+$TOP_DIR/../bsg_offchip/verilog/include
+# Files
+# downstream
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_link_ddr_downstream.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_link_source_sync_downstream.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_link_iddr_phy.v
+
+# BSG_misc
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_array_reverse.v		
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_dff_en.v			
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_dff_reset.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_counter_clear_up.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_round_robin_1_to_n.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_circular_ptr.v
+
+# BSG_mem	
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_mem_1r1w_synth.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_mem_1r1w.v
+
+# BSG_async
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_async_fifo.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_async_ptr_gray.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_launch_sync_sync.v
+
+#BSG_dataflow	
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_one_fifo.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_two_fifo.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_serial_in_parallel_out_full.v
+		
+		
+
+			
