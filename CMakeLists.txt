@@ -51,6 +51,7 @@ add_library(${BSGOFFCHIP_TARGET}
   src/upstream_ila.cc
   src/downstream_ila.cc
   src/upstream_child.cc
+  src/downstream_child.cc
 )
 
 target_include_directories(${BSGOFFCHIP_TARGET} PRIVATE include)

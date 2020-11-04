@@ -65,19 +65,35 @@ public:
   Ila model;
   // --------------- CONSTRUCTOR ----------- //
   BSG_DOWNSTREAM();
+
+private:
+  void AddChild(InstrRef& inst);
   
 protected:
   // -------- Input ------- //
+  ExprRef core_clk;
   ExprRef io_valid_in;
-  std::vector<ExprRef> io_data_in;
+  ExprRef io_data_in;
+  ExprRef core_ready;
 
   // -------- Output -------- //
   ExprRef core_data_out;
   ExprRef core_valid_out;
+  ExprRef io_token_out;
 
-  // ------- Internal -------- //
-  ExprRef cnt;
-  ExprRef data_temp;
+  // ------- Internal Buffer-------- //
+  ExprRef buffer;
+  ExprRef rptr;
+  ExprRef wptr;
+  ExprRef wptr_t;
+  ExprRef full;
+
+  // ----- Internal States ------//
+  ExprRef io_valid;
+  ExprRef io_data;
+  ExprRef core_data0;
+  ExprRef core_data1;
+  ExprRef child_valid;
   
 }; // class BSG_DOWNSTREAM
 

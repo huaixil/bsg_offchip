@@ -1,12 +1,10 @@
 
 
 // 1R 1W (x2) d=1 AW(V=I) DW(V=I) absmem
-// CoSA & Jasper
-// --- ra : read abstraction (depth = 1)
-//
+// only work for CoSA
 // Hongce Zhang (hongcez@princeton.edu)
 
-module absmem_ra(
+module absmem(
   clk,
   rst,
   vlg_raddr,
@@ -29,8 +27,7 @@ module absmem_ra(
 
   compare,
   equal,
-  issue,
-  read_assume_true
+  issue
   );
 
 
@@ -61,23 +58,14 @@ input  [DW-1:0] ila_r_rand_input;
 input           compare;
 output          equal;
 input           issue;
-(* keep *) output          read_assume_true;
 
 (* keep *)  reg             start_and_on;
+(* keep *)  reg [DW-1:0] mem[0:TTS-1];
 
 wire vlg_ren_real;
 wire vlg_wen_real;
 wire ila_ren_real;
 wire ila_wen_real;
-
-(* keep *)  reg          vlg_r_e0;
-(* keep *)  reg [AW-1:0] vlg_r_a0;
-(* keep *)  reg [DW-1:0] vlg_r_d0;
-
-
-(* keep *)  reg          ila_r_e0;
-(* keep *)  reg [AW-1:0] ila_r_a0;
-(* keep *)  reg [DW-1:0] ila_r_d0;
 
 (* keep *)  reg          vlg_m_e0;
 (* keep *)  reg [AW-1:0] vlg_m_a0;
@@ -104,62 +92,22 @@ assign ila_ren_real = ila_ren & ~compare & start_and_on;
 assign ila_wen_real = ila_wen & ~compare & start_and_on;
 
 
-assign vlg_rdata = vlg_ren_real ? (
-                      (vlg_m_e0 && vlg_m_a0 == vlg_raddr) ? vlg_m_d0
-                   :  vlg_r_rand_input ) : vlg_r_rand_input;
+assign vlg_rdata = vlg_ren_real ? 
+                      vlg_m_e0 && vlg_m_a0 == vlg_raddr ? vlg_m_d0
+                   : 
+                      mem[vlg_raddr] : vlg_r_rand_input;
 
-assign ila_rdata = ila_ren_real ? (
-                      (ila_m_e0 && ila_m_a0 == ila_raddr) ? ila_m_d0
-                   : ila_r_rand_input) : ila_r_rand_input;
-
-always @(posedge clk) begin 
-  if( rst ) begin
-    vlg_r_e0 <= 1'b0;
-  end
-  else begin 
-    //if( vlg_ren_real && ( vlg_r_e0 == 0 || (vlg_r_e0 == 1 && vlg_r_a0 == vlg_raddr) ) ) begin
-    if( vlg_ren_real && ( vlg_r_e0 == 0) ) begin
-      vlg_r_e0 <= 1'b1;
-      vlg_r_a0 <= vlg_raddr;
-      vlg_r_d0 <= vlg_r_rand_input; // vlg_rdata;
-    end
-  end
-end
-
-always @(posedge clk) begin 
-  if( rst ) begin
-    ila_r_e0 <= 1'b0;
-  end
-  else begin 
-    // if( ( ila_ren_real && ( ila_r_e0 == 0 || (ila_r_e0 == 1 && ila_r_a0 == ila_raddr ) ) ) )
-    if( ila_ren_real && ( ila_r_e0 == 0) ) begin
-      ila_r_e0 <= 1'b1;
-      ila_r_a0 <= ila_raddr;
-      ila_r_d0 <= ila_r_rand_input; // ila_rdata;
-    end
-    /*
-    else if (  ila_wen_real && ila_r_e0 && ila_r_a0 == ila_waddr  ) begin
-      ila_r_e0 <= ila_r_e0;
-      ila_r_a0 <= ila_r_a0;
-      ila_r_d0 <= ila_wdata;
-    end*/
-  end
-end
-
-// we only ensure that the initial read matches, not the read involve the new data (changed by write)
-// if you change it, we guarantee nothing
-
-assign read_assume_true = 
-  (vlg_r_e0 && ila_r_e0 && vlg_r_a0 == ila_r_a0) == 0  || (vlg_r_d0 == ila_r_d0);
-
-// ------------- WRITE LOGIC ---------------- //
+assign ila_rdata = ila_ren_real ?
+                      ila_m_e0 && ila_m_a0 == ila_raddr ? ila_m_d0
+                   :
+                      mem[ila_raddr] : ila_r_rand_input;
 
 always @(posedge clk) begin 
   if( rst ) begin
     vlg_m_e0 <= 1'b0;
   end
   else begin 
-    if( vlg_wen_real && (  vlg_m_e0 == 0  || (vlg_m_e0 == 1'b1 && vlg_m_a0 == vlg_waddr) ) ) begin
+    if(  vlg_m_e0 == 0 && vlg_wen_real) begin
       vlg_m_e0 <= 1'b1;
       vlg_m_a0 <= vlg_waddr;
       vlg_m_d0 <= vlg_wdata;
@@ -172,7 +120,7 @@ always @(posedge clk) begin
     ila_m_e0 <= 1'b0;
   end
   else begin 
-    if( ila_wen_real && ( ila_m_e0 == 0 || (ila_m_e0 == 1'b1 && ila_m_a0 == ila_waddr) ) ) begin
+    if(  ila_m_e0 == 0 && ila_wen_real) begin
       ila_m_e0 <= 1'b1;
       ila_m_a0 <= ila_waddr;
       ila_m_d0 <= ila_wdata;
@@ -180,17 +128,13 @@ always @(posedge clk) begin
   end
 end
 
-
 always @(*) begin
   vlg_match_ila = 0;
   if( vlg_m_e0 ) begin
     if(ila_m_e0 == 1 && ila_m_a0 == vlg_m_a0)
       vlg_match_ila = ila_m_d0 == vlg_m_d0;
-    else if(ila_r_e0 == 1 && ila_r_a0 == vlg_m_a0)
-      vlg_match_ila = ila_r_d0 == vlg_m_d0;
-    //else if(vlg_m_d0 == mem[vlg_m_a0])
-    //  vlg_match_ila = 1;
-    //below is an over-approximation
+    else if(vlg_m_d0 == mem[vlg_m_a0])
+      vlg_match_ila = 1;
     else
       vlg_match_ila = 0;
   end
@@ -203,10 +147,8 @@ always @(*) begin
   if( ila_m_e0 ) begin
     if(vlg_m_e0 == 1 && ila_m_a0 == vlg_m_a0)
       ila_match_vlg = ila_m_d0 == vlg_m_d0;
-    else if(vlg_r_e0 == 1 && vlg_r_a0 == ila_m_a0)
-      ila_match_vlg = ila_m_d0 == vlg_r_d0;
-    //else if(ila_m_d0 == mem[ila_m_a0])
-    //  ila_match_vlg = 1;
+    else if(ila_m_d0 == mem[ila_m_a0])
+      ila_match_vlg = 1;
     else
       ila_match_vlg = 0;
   end
@@ -218,5 +160,4 @@ assign equal = compare && ila_match_vlg && vlg_match_ila;
 
 endmodule
 
-
-    
+  

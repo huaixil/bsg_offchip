@@ -1,0 +1,12 @@
+
+{
+    "instructions": [
+      {
+        "instruction" : "DOWN_OUTPUT_FINAL",
+        "ready bound" : 2
+      }
+    ],
+    
+    "global invariants": []
+  
+  }

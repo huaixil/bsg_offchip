@@ -30,7 +30,7 @@ module bsg_link_ddr_downstream
   // Number of IO pins per physical IO channels
   ,parameter channel_width_p = 8
   // Number of physical IO channels
-  ,parameter num_channels_p  = 1
+  ,parameter num_channels_p  = 2
   // Receive fifo depth 
   // MUST MATCH paired bsg_link_ddr_upstream setting
   // Default value comes from child module

@@ -1,0 +1,21 @@
+{
+    "instructions": [
+      {
+        "instruction" : "DOWN_DATA_IN",
+        "ready bound" : 4
+      },
+
+      {
+        "instruction" : "DOWN_DATA_OUT0",
+        "ready bound" : 1
+      },
+
+      {
+        "instruction" : "DOWN_DATA_OUT1",
+        "ready bound" : 1
+      }
+    ],
+    
+    "global invariants": []
+  
+  }

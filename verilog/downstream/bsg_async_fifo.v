@@ -43,6 +43,7 @@ module bsg_async_fifo #(parameter   lg_size_p = "inv"
 
    logic [lg_size_p:0] w_ptr_gray_r;
    logic [lg_size_p:0] w_ptr_gray_r_rsync, r_ptr_gray_r_wsync, r_ptr_binary_r, w_ptr_binary_r;
+   logic [lg_size_p:0] w_ptr_binary_r_rsync;
 
    wire               r_valid_o_tmp; // remove inout warning from Lint
    assign r_valid_o = r_valid_o_tmp;
@@ -114,6 +115,11 @@ module bsg_async_fifo #(parameter   lg_size_p = "inv"
 
    assign w_full_o  = (w_ptr_gray_r == { ~r_ptr_gray_r_wsync[lg_size_p-:2]
                                          , r_ptr_gray_r_wsync[0+:lg_size_p-1] });
+   
+   bsg_gray_to_binary #(.width_p(lg_size_p+1)) bsg_g2b
+     (.gray_i(w_ptr_gray_r_rsync)
+      ,.binary_o(w_ptr_binary_r_rsync)
+      );
 
 
    // synopsys translate_off

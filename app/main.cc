@@ -81,7 +81,8 @@ void verify_downstream(
    ) {
   VerilogGeneratorBase::VlgGenConfig vlg_cfg;
   vlg_cfg.pass_node_name = true;
-  //vtg_cfg.ForceInstCheckReset = true;
+  vtg_cfg.ForceInstCheckReset = true;
+  vtg_cfg.MemAbsReadAbstraction = true; // enable read abstraction
 
   std::string RootPath    = "..";
   std::string VerilogPath = RootPath    + "/verilog/";
@@ -109,6 +110,42 @@ void verify_downstream(
   vg.GenerateTargets();
 }
 
+void verify_downstream_child(
+  Ila& model, 
+  VerilogVerificationTargetGenerator::vtg_config_t vtg_cfg,
+  const std::vector<std::string> & design_files
+   ) {
+  VerilogGeneratorBase::VlgGenConfig vlg_cfg;
+  vlg_cfg.pass_node_name = true;
+  vtg_cfg.ForceInstCheckReset = true;
+
+  std::string RootPath    = "..";
+  std::string VerilogPath = RootPath    + "/verilog/";
+  std::string IncludePath = VerilogPath + "include/";
+  std::string RefrelPath  = RootPath    + "/refinement/";
+  std::string OutputPath  = RootPath    + "/verification/";
+
+  std::vector<std::string> path_to_design_files;
+  for(auto && f : design_files)
+    path_to_design_files.push_back( VerilogPath + f );
+  
+
+  VerilogVerificationTargetGenerator vg(
+      {IncludePath},                                         // one include path
+      path_to_design_files,                                  // designs
+      "bsg_link_ddr_downstream",                               // top_module_name
+      RefrelPath + "ref-rel-var-map-downchild.json",                // variable mapping
+      RefrelPath + "ref-rel-inst-cond-downchild.json",              // conditions of start/ready
+      OutputPath,                                            // output path
+      model.child(0).get(),                                           // model
+      VerilogVerificationTargetGenerator::backend_selector::JASPERGOLD, // backend: JASPERGOLD
+      vtg_cfg,  // target generator configuration
+      vlg_cfg); // verilog generator configuration
+
+  vg.GenerateTargets();
+}
+
+
 /// Build the model
 int main() {
   // extract the configurations
@@ -117,9 +154,7 @@ int main() {
   };
 
   std::vector<std::string> downstream_design_files = {
-    "bsg_link_ddr_downstream.v",
-    "bsg_link_iddr_phy.v",
-    "bsg_link_source_sync_downstream.v"
+    "bsg_link_ddr_downstream.sv2v.v"
   };
 
   auto vtg_cfg = SetConfiguration();
@@ -129,8 +164,9 @@ int main() {
   BSG_DOWNSTREAM downstream_ila;
 
   //verify_upstream_child(upstream_ila.model, vtg_cfg, upstream_design_files);
-  verify_upstream(upstream_ila.model, vtg_cfg, upstream_design_files);
-  //verify_downstream(downstream_ila.model, vtg_cfg, downstream_design_files);
+  //verify_upstream(upstream_ila.model, vtg_cfg, upstream_design_files);
+  verify_downstream(downstream_ila.model, vtg_cfg, downstream_design_files);
+  //verify_downstream_child(downstream_ila.model, vtg_cfg, downstream_design_files);
 
   return 0;
 }

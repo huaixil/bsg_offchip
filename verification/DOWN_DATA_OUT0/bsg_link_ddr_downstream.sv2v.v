@@ -4,12 +4,14 @@ module bsg_link_iddr_phy_width_p9
 (
   clk_i,
   data_i,
-  data_r_o
+  data_r_o,
+  rst
 );
 
   input [8:0] data_i;
   output [17:0] data_r_o;
   input clk_i;
+  input rst;
   wire [17:0] data_r_o;
   wire N0;
   wire [8:0] data_p_r,data_n_r;
@@ -23,8 +25,15 @@ module bsg_link_iddr_phy_width_p9
   data_r_o_8_sv2v_reg,data_r_o_7_sv2v_reg,data_r_o_6_sv2v_reg,data_r_o_5_sv2v_reg,
   data_r_o_4_sv2v_reg,data_r_o_3_sv2v_reg,data_r_o_2_sv2v_reg,data_r_o_1_sv2v_reg,
   data_r_o_0_sv2v_reg;
-  assign data_p_r[8:0] = {data_p_r_8_sv2v_reg,data_p_r_7_sv2v_reg,data_p_r_6_sv2v_reg,data_p_r_5_sv2v_reg,data_p_r_4_sv2v_reg,
-                          data_p_r_3_sv2v_reg,data_p_r_2_sv2v_reg,data_p_r_1_sv2v_reg,data_p_r_0_sv2v_reg};
+  assign data_p_r[8] = data_p_r_8_sv2v_reg;
+  assign data_p_r[7] = data_p_r_7_sv2v_reg;
+  assign data_p_r[6] = data_p_r_6_sv2v_reg;
+  assign data_p_r[5] = data_p_r_5_sv2v_reg;
+  assign data_p_r[4] = data_p_r_4_sv2v_reg;
+  assign data_p_r[3] = data_p_r_3_sv2v_reg;
+  assign data_p_r[2] = data_p_r_2_sv2v_reg;
+  assign data_p_r[1] = data_p_r_1_sv2v_reg;
+  assign data_p_r[0] = data_p_r_0_sv2v_reg;
   assign data_n_r[8] = data_n_r_8_sv2v_reg;
   assign data_n_r[7] = data_n_r_7_sv2v_reg;
   assign data_n_r[6] = data_n_r_6_sv2v_reg;
@@ -55,7 +64,12 @@ module bsg_link_iddr_phy_width_p9
   assign N0 = ~clk_i;
 
   always @(posedge clk_i) begin
-    if(1'b1) begin
+  if (rst) begin
+    data_p_r_8_sv2v_reg <= 1'b0;
+    data_r_o_8_sv2v_reg <= 1'b0;
+    
+  end
+  else begin
       data_p_r_8_sv2v_reg <= data_i[8];
       data_p_r_7_sv2v_reg <= data_i[7];
       data_p_r_6_sv2v_reg <= data_i[6];
@@ -4078,6 +4092,65 @@ endmodule
 
 
 
+module bsg_scan_width_p7_xor_p1
+(
+  i,
+  o
+);
+
+  input [6:0] i;
+  output [6:0] o;
+  wire [6:0] o;
+  wire t_2__6_,t_2__5_,t_2__4_,t_2__3_,t_2__2_,t_2__1_,t_2__0_,t_1__6_,t_1__5_,t_1__4_,
+  t_1__3_,t_1__2_,t_1__1_,t_1__0_;
+  assign t_1__6_ = i[6] ^ 1'b0;
+  assign t_1__5_ = i[5] ^ i[6];
+  assign t_1__4_ = i[4] ^ i[5];
+  assign t_1__3_ = i[3] ^ i[4];
+  assign t_1__2_ = i[2] ^ i[3];
+  assign t_1__1_ = i[1] ^ i[2];
+  assign t_1__0_ = i[0] ^ i[1];
+  assign t_2__6_ = t_1__6_ ^ 1'b0;
+  assign t_2__5_ = t_1__5_ ^ 1'b0;
+  assign t_2__4_ = t_1__4_ ^ t_1__6_;
+  assign t_2__3_ = t_1__3_ ^ t_1__5_;
+  assign t_2__2_ = t_1__2_ ^ t_1__4_;
+  assign t_2__1_ = t_1__1_ ^ t_1__3_;
+  assign t_2__0_ = t_1__0_ ^ t_1__2_;
+  assign o[6] = t_2__6_ ^ 1'b0;
+  assign o[5] = t_2__5_ ^ 1'b0;
+  assign o[4] = t_2__4_ ^ 1'b0;
+  assign o[3] = t_2__3_ ^ 1'b0;
+  assign o[2] = t_2__2_ ^ t_2__6_;
+  assign o[1] = t_2__1_ ^ t_2__5_;
+  assign o[0] = t_2__0_ ^ t_2__4_;
+
+endmodule
+
+
+
+module bsg_gray_to_binary_width_p7
+(
+  gray_i,
+  binary_o
+);
+
+  input [6:0] gray_i;
+  output [6:0] binary_o;
+  wire [6:0] binary_o;
+
+  bsg_scan_width_p7_xor_p1
+  scan_xor
+  (
+    .i(gray_i),
+    .o(binary_o)
+  );
+
+
+endmodule
+
+
+
 module bsg_async_fifo_lg_size_p6_width_p16
 (
   w_clk_i,
@@ -4105,7 +4178,7 @@ module bsg_async_fifo_lg_size_p6_width_p16
   wire [15:0] r_data_o;
   wire w_full_o,r_valid_o,N0,N1;
   wire [6:0] w_ptr_binary_r,r_ptr_binary_r,w_ptr_gray_r,w_ptr_gray_r_rsync,r_ptr_gray_r,
-  r_ptr_gray_r_wsync;
+  r_ptr_gray_r_wsync,w_ptr_binary_r_rsync;
 
   bsg_mem_1r1w_width_p16_els_p64_read_write_same_addr_p0
   MSYNC_1r1w
@@ -4148,6 +4221,14 @@ module bsg_async_fifo_lg_size_p6_width_p16
 
   assign r_valid_o = r_ptr_gray_r != w_ptr_gray_r_rsync;
   assign w_full_o = w_ptr_gray_r == { N0, N1, r_ptr_gray_r_wsync[4:0] };
+
+  bsg_gray_to_binary_width_p7
+  bsg_g2b
+  (
+    .gray_i(w_ptr_gray_r_rsync),
+    .binary_o(w_ptr_binary_r_rsync)
+  );
+
   assign N0 = ~r_ptr_gray_r_wsync[6];
   assign N1 = ~r_ptr_gray_r_wsync[5];
 
@@ -4507,9 +4588,15 @@ module bsg_link_source_sync_downstream_channel_width_p16_lg_fifo_depth_p6_lg_cre
   output core_token_r_o;
   output core_valid_o;
   wire [15:0] core_data_o,core_async_fifo_data_lo;
+  reg  [15:0] data_commit;
   wire core_token_r_o,core_valid_o,io_async_fifo_full,core_async_fifo_deque,
   core_async_fifo_valid_lo,core_async_fifo_ready_li;
   wire [2:0] core_credits_sent_r;
+
+  always @(posedge core_clk_i) begin
+    if(core_async_fifo_deque)
+      data_commit <= core_async_fifo_data_lo;
+  end 
 
   bsg_async_fifo_lg_size_p6_width_p16
   baf
@@ -5229,7 +5316,7 @@ module bsg_serial_in_parallel_out_full_width_p32_els_p2
 
 
   bsg_two_fifo_width_p32
-  fifos_0_twofifo_fifo 
+  fifos_0_twofifo 
   (
     .clk_i(clk_i),
     .reset_i(reset_i),
@@ -5243,7 +5330,7 @@ module bsg_serial_in_parallel_out_full_width_p32_els_p2
 
 
   bsg_one_fifo_width_p32
-  fifos_1_onefifo_fifo 
+  fifos_1_onefifo 
   (
     .clk_i(clk_i),
     .reset_i(reset_i),
@@ -5298,7 +5385,8 @@ module bsg_link_ddr_downstream
   (
     .clk_i(io_clk_i[0]),
     .data_i({ io_valid_i[0:0], io_data_i[7:0] }),
-    .data_r_o({ \ch_0_.io_iddr_data_top , \ch_0_.io_iddr_v_lo , \ch_0_.io_iddr_data_bottom  })
+    .data_r_o({ \ch_0_.io_iddr_data_top , \ch_0_.io_iddr_v_lo , \ch_0_.io_iddr_data_bottom  }),
+    .rst(io_link_reset_i[0])
   );
 
 
@@ -5323,7 +5411,8 @@ module bsg_link_ddr_downstream
   (
     .clk_i(io_clk_i[1]),
     .data_i({ io_valid_i[1:1], io_data_i[15:8] }),
-    .data_r_o({ \ch_1_.io_iddr_data_top , \ch_1_.io_iddr_v_lo , \ch_1_.io_iddr_data_bottom  })
+    .data_r_o({ \ch_1_.io_iddr_data_top , \ch_1_.io_iddr_v_lo , \ch_1_.io_iddr_data_bottom  }),
+    .rst(io_link_reset_i[1])
   );
 
 
@@ -5356,9 +5445,9 @@ module bsg_link_ddr_downstream
     .yumi_i(core_yumi_i)
   );
 
+
   assign core_sipo_yumi_lo = N0 & core_sipo_ready_lo;
   assign N0 = core_sipo_valid_li[1] & core_sipo_valid_li[0];
   assign _6_net_ = core_sipo_valid_li[1] & core_sipo_valid_li[0];
 
 endmodule
-

@@ -17,6 +17,8 @@ $TOP_DIR/../bsg_offchip/verilog/downstream/bsg_dff_reset.v
 $TOP_DIR/../bsg_offchip/verilog/downstream/bsg_counter_clear_up.v
 $TOP_DIR/../bsg_offchip/verilog/downstream/bsg_round_robin_1_to_n.v
 $TOP_DIR/../bsg_offchip/verilog/downstream/bsg_circular_ptr.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_gray_to_binary.v
+$TOP_DIR/../bsg_offchip/verilog/downstream/bsg_scan.v
 
 # BSG_mem	
 $TOP_DIR/../bsg_offchip/verilog/downstream/bsg_mem_1r1w_synth.v

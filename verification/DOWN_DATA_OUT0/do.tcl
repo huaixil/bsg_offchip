@@ -28,15 +28,12 @@ assume -name additional_mapping_control_assume17 {m1.ch_0_downstream.baf.w_ptr_b
 assume -name additional_mapping_control_assume18 {m1.ch_0_downstream.baf.w_data_i == __MEM_buffer_0_wdata}
 assume -name additional_mapping_control_assume19 {m1.ch_0_downstream.baf.r_data_o == mi0.ila_rdata}
 assume -name rfassumptions20 {~io_valid || __ILA_I_core_clk}
-assume -name issue_decode21 {(~ __START__) || (__ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_IN__)}
+assume -name issue_decode21 {(~ __START__) || (__ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT0__)}
 assume -name issue_valid22 {(~ __START__) || (__ILA_BSG_DOWNSTREAM_ch_valid__)}
 assume -name post_value_holder23 {(~(__CYCLE_CNT__ == 1) || ((io_data_commit) == (m1.ch_0_iddr_data.data_p_r[7:0])))}
 assume -name post_value_holder24 {(~(__CYCLE_CNT__ == 1) || ((io_valid_commit) == (io_valid)))}
 assume -name post_value_holder25 {(~(__CYCLE_CNT__ == 3) || ((wptr_decode) == (m1.ch_0_downstream.baf.w_ptr_binary_r)))}
 assume -name absmem26 {mi0_read_assume_true==1'b1}
-assert -name variable_map_assert0 {(~ __IEND__) || (buffer_EQ_)}
-assert -name variable_map_assert1 {(~ __IEND__) || (__m13__)}
-assert -name variable_map_assert2 {(~ __IEND__) || ((~ ((__START__) ) || (m1.ch_0_iddr_data.data_p_r[7:0] == __ILA_SO_io_data) )&&( ~ (~(__START__)&&(__IEND__) ) || (__m14__)))}
-assert -name variable_map_assert3 {(~ __IEND__) || ((~ ((__START__) ) || (__m15__) )&&( ~ (~(__START__)&&(__IEND__) ) || (__m16__)))}
-assert -name variable_map_assert4 {(~ __IEND__) || ((~ ((__START__) ) || (__m17__) )&&( ~ (~(__START__)&&(__IEND__) ) || (__m18__)))}
-assert -name variable_map_assert5 {(~ __IEND__) || ((~ ((__START__) ) || (__m19__) )&&( ~ (~(__START__)&&(__IEND__) ) || (`true)))}
+assert -name variable_map_assert0 {(~ __IEND__) || (__m13__)}
+assert -name variable_map_assert1 {(~ __IEND__) || (__m14__)}
+assert -name variable_map_assert2 {(~ __IEND__) || (__m15__)}
