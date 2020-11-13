@@ -14,7 +14,7 @@ To run the simulation, you still have to
 1. Install [ILANG](https://bo-yuan-huang.gitbook.io/ilang/)
 2. Generate verification targets for the implementation
 ```bash
-mkdir -p build && cd build
+mkdir -p build && mkdir verification && cd build
 cmake .. && make
 ./BSGOFFCHIPExe
 ```
