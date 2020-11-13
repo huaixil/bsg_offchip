@@ -70,6 +70,8 @@ BSG_DOWNSTREAM::BSG_DOWNSTREAM()
         instr.SetDecode(core_ready == BvConst(1,1) & wptr_t != rptr & rptr(0) == BvConst(1,1) & core_clk == BvConst(0,1));
 
         auto data_out = Load(buffer, rptr(BUFFER_BIT-1,0));
+        auto rptr_updated = rptr + 1;
+        instr.SetUpdate(io_token_out, rptr_updated(3));
         instr.SetUpdate(core_data1, data_out);
         instr.SetUpdate(rptr, rptr + 1);
         instr.SetUpdate(full, BvConst(0,1));
