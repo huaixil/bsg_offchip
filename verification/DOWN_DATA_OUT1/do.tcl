@@ -38,3 +38,4 @@ assert -name variable_map_assert0 {(~ __IEND__) || (`true)}
 assert -name variable_map_assert1 {(~ __IEND__) || (__m13__)}
 assert -name variable_map_assert2 {(~ __IEND__) || (__m14__)}
 assert -name variable_map_assert3 {(~ __IEND__) || (__m15__)}
+assert -name variable_map_assert4 {(~ __IEND__) || (__m16__)}

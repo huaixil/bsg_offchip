@@ -46,6 +46,7 @@ __m12__,
 __m13__,
 __m14__,
 __m15__,
+__m16__,
 __m1__,
 __m2__,
 __m3__,
@@ -108,6 +109,7 @@ output            __m12__;
 output            __m13__;
 output            __m14__;
 output            __m15__;
+output            __m16__;
 output            __m1__;
 output            __m2__;
 output            __m3__;
@@ -171,6 +173,7 @@ wire            __io_valid_commit_init__;
 (* keep *) wire            __m13__;
 (* keep *) wire            __m14__;
 (* keep *) wire            __m15__;
+(* keep *) wire            __m16__;
 (* keep *) wire            __m1__;
 (* keep *) wire            __m2__;
 (* keep *) wire            __m3__;
@@ -227,7 +230,8 @@ assign __m11__ = m1.ch_0_downstream.baf.w_ptr_binary_r == __ILA_SO_wptr ;
 assign __m12__ = m1.ch_0_downstream.baf.w_ptr_binary_r_rsync == __ILA_SO_wptr_t ;
 assign __m13__ = m1.ch_0_downstream.data_commit == __ILA_SO_core_data1 ;
 assign __m14__ = m1.ch_0_downstream.baf.w_full_o == __ILA_SO_full ;
-assign __m15__ = m1.ch_0_downstream.baf.r_ptr_binary_r == __ILA_SO_rptr ;
+assign __m15__ = m1.core_token_r_o == __ILA_SO_io_token_out ;
+assign __m16__ = m1.ch_0_downstream.baf.r_ptr_binary_r == __ILA_SO_rptr ;
 assign __EDCOND__ = (`false|| ( __CYCLE_CNT__ == 4'd1)) && __STARTED__  ;
 assign __IEND__ = (`false|| ( __CYCLE_CNT__ == 4'd1)) && __STARTED__ && __RESETED__ && (~ __ENDED__) ;
 always @(posedge clk) begin
@@ -272,8 +276,8 @@ BSG_DOWNSTREAM_ch__DOT__DOWN_DATA_OUT1 m0 (
    .rst(rst),
    .__ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__(__ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__),
    .__ILA_BSG_DOWNSTREAM_ch_valid__(__ILA_BSG_DOWNSTREAM_ch_valid__),
-   .buffer_data_n16(__IMEM_buffer_0_rdata),
-   .buffer_addr_n15(__IMEM_buffer_0_raddr),
+   .buffer_data_n18(__IMEM_buffer_0_rdata),
+   .buffer_addr_n17(__IMEM_buffer_0_raddr),
    .core_data_out(__ILA_SO_core_data_out),
    .core_valid_out(__ILA_SO_core_valid_out),
    .io_token_out(__ILA_SO_io_token_out),

@@ -8,8 +8,8 @@ io_valid_in,
 rst,
 __ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__,
 __ILA_BSG_DOWNSTREAM_ch_valid__,
-buffer_data_n16,
-buffer_addr_n15,
+buffer_data_n18,
+buffer_addr_n17,
 core_data_out,
 core_valid_out,
 io_token_out,
@@ -31,10 +31,10 @@ input            core_ready;
 input      [7:0] io_data_in;
 input            io_valid_in;
 input            rst;
-input     [15:0] buffer_data_n16;
+input     [15:0] buffer_data_n18;
 output            __ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__;
 output            __ILA_BSG_DOWNSTREAM_ch_valid__;
-output      [5:0] buffer_addr_n15;
+output      [5:0] buffer_addr_n17;
 output reg     [31:0] core_data_out;
 output reg            core_valid_out;
 output reg            io_token_out;
@@ -51,8 +51,8 @@ output reg      [7:0] __COUNTER_start__n11;
 wire            __ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__;
 wire            __ILA_BSG_DOWNSTREAM_ch_valid__;
 wire            __START__;
-wire      [5:0] buffer_addr_n15;
-wire     [15:0] buffer_data_n16;
+wire      [5:0] buffer_addr_n17;
+wire     [15:0] buffer_data_n18;
 wire            bv_1_0_n8__$557;
 wire            bv_1_1_n0__$542;
 wire      [6:0] bv_7_1_n12__$566;
@@ -72,8 +72,10 @@ wire            io_valid_in;
 (* keep *) wire            io_valid_randinit;
 wire            n10__$561;
 wire      [6:0] n13__$568;
-wire      [5:0] n14__$562;
-wire     [15:0] n17__$564;
+wire            n14__$569;
+wire      [6:0] n15__$573;
+wire      [5:0] n16__$562;
+wire     [15:0] n19__$564;
 wire            n1__$544;
 wire            n2__$546;
 wire            n3__$548;
@@ -101,9 +103,11 @@ assign n10__$561 =  ( n7__$556 ) & (n9__$559 )  ;
 assign __ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__ = n10__$561 ;
 assign bv_7_1_n12__$566 = 7'h1 ;
 assign n13__$568 =  ( rptr ) + ( bv_7_1_n12__$566 )  ;
-assign n14__$562 = rptr[5:0] ;
-assign buffer_addr_n15 = n14__$562 ;
-assign n17__$564 = buffer_data_n16 ;
+assign n14__$569 = n13__$568[3:3] ;
+assign n15__$573 =  ( rptr ) + ( bv_7_1_n12__$566 )  ;
+assign n16__$562 = rptr[5:0] ;
+assign buffer_addr_n17 = n16__$562 ;
+assign n19__$564 = buffer_data_n18 ;
 always @(posedge clk) begin
    if(rst) begin
        core_data_out <= core_data_out_randinit ;
@@ -132,10 +136,10 @@ always @(posedge clk) begin
            core_valid_out <= core_valid_out ;
        end
        if (__ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__) begin
-           io_token_out <= io_token_out ;
+           io_token_out <= n14__$569 ;
        end
        if (__ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__) begin
-           rptr <= n13__$568 ;
+           rptr <= n15__$573 ;
        end
        if (__ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__) begin
            wptr <= wptr ;
@@ -156,7 +160,7 @@ always @(posedge clk) begin
            core_data0 <= core_data0 ;
        end
        if (__ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__) begin
-           core_data1 <= n17__$564 ;
+           core_data1 <= n19__$564 ;
        end
        if (__ILA_BSG_DOWNSTREAM_ch_decode_of_DOWN_DATA_OUT1__) begin
            child_valid <= bv_1_1_n0__$542 ;
