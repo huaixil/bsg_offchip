@@ -19,10 +19,10 @@ input core_yumi_i;
 output [63:0] data_o;
 output valid_o;
 
-wire edge_clk;
+wire [1:0] edge_clk;
 wire [15:0] edge_data;
 wire [1:0] edge_valid;
-wire edge_token;
+wire [1:0] edge_token;
 
 bsg_link_ddr_upstream upstream
 (
