@@ -57,7 +57,7 @@ bsg_link_ddr_downstream downstream
   .core_valid_o (valid_o),
   .core_yumi_i (core_yumi_i),
 
-  .io_clk_i (edge_clk_i),
+  .io_clk_i ({edge_clk_i,edge_clk_i}),
   .io_data_i (edge_data),
   .io_valid_i (edge_valid),
   .core_token_r_o (edge_token)
