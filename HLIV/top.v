@@ -5,6 +5,7 @@ module bsg_top
     rst,
     data_i,
     valid_i,
+    core_yumi_i,
     data_o,
     valid_o
 );
