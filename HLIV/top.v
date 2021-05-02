@@ -1,5 +1,6 @@
 module bsg_top
-(
+(   
+    base_clk,
     core_clk,
     io_clk,
     edge_clk_i,
@@ -11,6 +12,7 @@ module bsg_top
     valid_o
 );
 
+input base_clk;
 input core_clk;
 input io_clk;
 input edge_clk_i;
