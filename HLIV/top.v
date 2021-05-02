@@ -14,6 +14,7 @@ input io_clk;
 input rst;
 input [63:0] data_i;
 input valid_i;
+input core_yumi_i;
 output [63:0] data_o;
 output valid_o;
 
@@ -49,7 +50,7 @@ bsg_link_ddr_downstream downstream
 
   .core_data_o (data_o),
   .core_valid_o (valid_o),
-  .core_yumi_i,
+  .core_yumi_i (core_yumi_i),
 
   .io_clk_i (edge_clk),
   .io_data_i (edge_data),
