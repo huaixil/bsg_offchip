@@ -12,4 +12,5 @@ reset -expression {rst} {:global_formal_reset} -non_resettable_regs {0};
 
 assume {~core_yumi_i || valid_o}
 assert {##10 edge_clk[0] == edge_clk_i}
+assert {edge_clk[0] == edge_clk[1]}
 assert {@(posedge core_clk) valid_i |=> ##[0:$] valid_o}
