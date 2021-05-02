@@ -56,3 +56,5 @@ bsg_link_ddr_downstream downstream
   .io_valid_i (edge_valid),
   .core_token_r_o (edge_token)
 );
+
+endmodule
