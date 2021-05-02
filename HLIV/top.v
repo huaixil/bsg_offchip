@@ -2,6 +2,7 @@ module bsg_top
 (
     core_clk,
     io_clk,
+    edge_clk_i,
     rst,
     data_i,
     valid_i,
@@ -12,6 +13,7 @@ module bsg_top
 
 input core_clk;
 input io_clk;
+input edge_clk_i;
 input rst;
 input [63:0] data_i;
 input valid_i;
@@ -53,7 +55,7 @@ bsg_link_ddr_downstream downstream
   .core_valid_o (valid_o),
   .core_yumi_i (core_yumi_i),
 
-  .io_clk_i (edge_clk),
+  .io_clk_i (edge_clk_i),
   .io_data_i (edge_data),
   .io_valid_i (edge_valid),
   .core_token_r_o (edge_token)
