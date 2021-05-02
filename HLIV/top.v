@@ -21,7 +21,7 @@ output valid_o;
 
 wire edge_clk;
 wire [15:0] edge_data;
-wire edge_valid;
+wire [1:0] edge_valid;
 wire edge_token;
 
 bsg_link_ddr_upstream upstream

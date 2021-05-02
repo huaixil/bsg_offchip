@@ -4,5 +4,6 @@ analyze -sva  \
     bsg_link_ddr_upstream.sv2v.v
 
 elaborate -top bsg_top
-clock core_clk
+clock -clear; clock io_clk -both_edges; clock io_clk core_clk 2 1
 reset rst
+
