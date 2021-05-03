@@ -53,7 +53,6 @@ sent_counter,
 finish_counter,
 valid_i,
 data_i,
-io_token,
 token_clk_i
 );
 input            __ILA_I_core_clk;
@@ -101,7 +100,6 @@ output reg      [6:0] sent_counter;
 output reg      [6:0] finish_counter;
 output reg            valid_i;
 output reg     [63:0] data_i;
-output reg            io_token;
 output reg            token_clk_i;
 wire            __2ndIEND__;
 (* keep *) wire            __EDCOND__;
@@ -140,7 +138,6 @@ wire            clk;
 (* keep *) wire     [63:0] data_o;
 (* keep *) wire            dummy_reset;
 (* keep *) wire     [63:0] random_data;
-(* keep *) wire            random_token;
 (* keep *) wire            random_valid;
 wire            rst;
 (* keep *) wire            valid_o;
@@ -192,12 +189,10 @@ always @(posedge __ILA_I_core_clk) begin
 end
 
 always @(posedge __ILA_I_core_clk) begin
-   if(rst) begin io_token <= 0; token_clk_i <= 0; end
-   else if (random_token) begin
-       io_token <= 1;
-       token_clk_i <= ~token_clk_i;
+   if(rst) token_clk_i <= 0; end
+   else begin
+       token_clk_i <= m1.upstream.token_clk_i[0];
    end
-   else io_token <= 0;
 end
 
 
