@@ -189,7 +189,7 @@ always @(posedge __ILA_I_core_clk) begin
 end
 
 always @(posedge __ILA_I_core_clk) begin
-   if(rst) token_clk_i <= 0; end
+   if(rst) token_clk_i <= 0;
    else begin
        token_clk_i <= m1.upstream.token_clk_i[0];
    end
