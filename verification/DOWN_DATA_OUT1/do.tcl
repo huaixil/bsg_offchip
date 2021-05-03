@@ -23,7 +23,7 @@ assume -name variable_map_assume_10 {(~ __START__ )|| ((~ ((__START__) ) || (__m
 assume -name variable_map_assume_11 {(~ __START__ )|| (__m9__)}
 assume -name variable_map_assume_12 {(~ __START__ )|| ((~ ((__START__) ) || (__m10__) )&&( ~ (~(__START__)&&(__IEND__) ) || (__m11__)))}
 assume -name variable_map_assume_13 {(~ __START__ )|| ((~ ((__START__) ) || (__m12__) )&&( ~ (~(__START__)&&(__IEND__) ) || (`true)))}
-assume -name additional_mapping_control_assume14 {m1.downstream.io_data_i == __ILA_I_io_data_in}
+assume -name additional_mapping_control_assume14 {m1.downstream.io_data_i[7:0] == __ILA_I_io_data_in}
 assume -name additional_mapping_control_assume15 {m1.downstream.io_valid_i == {__ILA_I_io_valid_in, __ILA_I_io_valid_in}}
 assume -name additional_mapping_control_assume16 {__ILA_I_core_ready == m1.downstream.ch_0_downstream.core_async_fifo_ready_li}
 assume -name additional_mapping_control_assume17 {m1.downstream.ch_0_downstream.baf.r_ptr_binary_r ==  __MEM_buffer_0_raddr}
