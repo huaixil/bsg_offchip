@@ -15,4 +15,4 @@ assume {~valid_o || core_yumi_i}
 
 assert {##10 edge_clk[0] == edge_clk_i}
 assert {edge_clk[0] == edge_clk[1]}
-assert {@(posedge core_clk) (core_valid_i & upstream.core_ready_o) |=> ##[0:$] valid_o}
+assert {@(posedge core_clk) (valid_i & upstream.core_ready_o) |=> ##[0:$] valid_o}
