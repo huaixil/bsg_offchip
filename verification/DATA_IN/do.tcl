@@ -19,7 +19,7 @@ assume -name variable_map_assume_7 {(~ __START__ )|| (m1.upstream.io_valid_r_o[0
 assume -name variable_map_assume_8 {(~ __START__ )|| (__m5__)}
 assume -name rfassumptions9 {m1.upstream.core_data_i == data_i}
 assume -name rfassumptions10 {m1.upstream.core_valid_i == valid_i}
-assume -name rfassumptions11 {($rose(m1.upstream.token_clk[0]) | $fell(m1.upstream.token_clk[0])) && __ILA_I_io_token}
+assume -name rfassumptions11 {($rose(m1.upstream.token_clk_i[0]) | $fell(m1.upstream.token_clk_i[0])) && __ILA_I_io_token}
 assume -name issue_decode12 {(~ __START__) || (__ILA_BSG_UPSTREAM_decode_of_DATA_IN__)}
 assume -name issue_valid13 {(~ __START__) || (__ILA_BSG_UPSTREAM_valid__)}
 assume -name post_value_holder14 {(~((__START__ || __STARTED__) && m1.upstream.out_piso.shift_ctr_r == 0) || ((data0) == (m1.upstream.out_piso.data_o)))}
