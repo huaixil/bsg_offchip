@@ -18,7 +18,6 @@ __MEM_buffer_0_waddr,
 __VLG_I_base_clk,
 __VLG_I_core_yumi_i,
 __VLG_I_data_i,
-__VLG_I_io_clk,
 __VLG_I_valid_i,
 __io_data_commit_init__,
 __io_valid_commit_init__,
@@ -86,7 +85,6 @@ input      [5:0] __MEM_buffer_0_waddr;
 input            __VLG_I_base_clk;
 input            __VLG_I_core_yumi_i;
 input     [63:0] __VLG_I_data_i;
-input            __VLG_I_io_clk;
 input            __VLG_I_valid_i;
 input      [8:0] __io_data_commit_init__;
 input            __io_valid_commit_init__;
@@ -176,7 +174,6 @@ wire            __2ndIEND__;
 (* keep *) wire            __VLG_I_base_clk;
 (* keep *) wire            __VLG_I_core_yumi_i;
 (* keep *) wire     [63:0] __VLG_I_data_i;
-(* keep *) wire            __VLG_I_io_clk;
 (* keep *) wire            __VLG_I_valid_i;
 wire      [8:0] __io_data_commit_init__;
 wire            __io_valid_commit_init__;
@@ -318,7 +315,7 @@ bsg_top m1(
     .data_i(__VLG_I_data_i),
     .data_o(data_o),
     .edge_clk_i(__ILA_I_core_clk),
-    .io_clk(__VLG_I_io_clk),
+    .io_clk(clk),
     .rst(rst),
     .valid_i(__VLG_I_valid_i),
     .valid_o(valid_o)
