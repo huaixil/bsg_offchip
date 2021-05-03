@@ -11,6 +11,8 @@ clock base_clk edge_clk_i 4 4;
 reset -expression {rst} {:global_formal_reset} -non_resettable_regs {0};
 
 assume {~core_yumi_i || valid_o}
+assume {~valid_o || core_yumi_i}
+
 assert {##10 edge_clk[0] == edge_clk_i}
 assert {edge_clk[0] == edge_clk[1]}
-assert {@(posedge core_clk) valid_i |=> ##[0:$] valid_o}
+assert {@(posedge core_clk) (core_valid_in & upstream.core_ready_o) |=> ##[0:$] valid_o}
