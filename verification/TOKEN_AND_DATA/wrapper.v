@@ -178,7 +178,7 @@ assign __m9__ = finish_counter == __ILA_SO_finish_cnt ;
 assign __m10__ = finish_cnt_holder == __ILA_SO_finish_cnt ;
 assign __EDCOND__ = (`false|| (m1.upstream.out_piso.shift_ctr_r)) && __STARTED__  ;
 assign __IEND__ = (`false|| (m1.upstream.out_piso.shift_ctr_r)) && __STARTED__ && __RESETED__ && (~ __ENDED__)&& ( __CYCLE_CNT__ <= 50) ;
-assign sent_counter = m1.upstream.ch_0_sso.pos_credit_ctr.r_counter_r[5:0] + m1.upstream.ch_0_sso.neg_credit_ctr.r_counter_r[5:0];
+assign sent_counter = m1.upstream.ch_0_sso.pos_credit_ctr.r_counter_r[4:0] + m1.upstream.ch_0_sso.neg_credit_ctr.r_counter_r[4:0];
 assign finish_counter = {(m1.upstream.ch_0_sso.pos_credit_ctr.w_counter_binary_r_rsync[3:0] + m1.upstream.ch_0_sso.neg_credit_ctr.w_counter_binary_r_rsync[3:0]),3'b000};
 
 always @(posedge __ILA_I_core_clk) begin
