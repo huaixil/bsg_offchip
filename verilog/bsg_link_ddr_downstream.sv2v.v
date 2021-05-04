@@ -5362,9 +5362,9 @@ module bsg_link_ddr_downstream
   core_token_r_o
 );
 
-  input [1:0] io_link_reset_i;
+  input io_link_reset_i;
   output [63:0] core_data_o;
-  input [1:0] io_clk_i;
+  input io_clk_i;
   input [15:0] io_data_i;
   input [1:0] io_valid_i;
   output [1:0] core_token_r_o;
@@ -5383,10 +5383,10 @@ module bsg_link_ddr_downstream
   bsg_link_iddr_phy_width_p9
   ch_0_iddr_data 
   (
-    .clk_i(io_clk_i[0]),
+    .clk_i(io_clk_i),
     .data_i({ io_valid_i[0:0], io_data_i[7:0] }),
     .data_r_o({ \ch_0_.io_iddr_data_top , \ch_0_.io_iddr_v_lo , \ch_0_.io_iddr_data_bottom  }),
-    .rst(io_link_reset_i[0])
+    .rst(io_link_reset_i)
   );
 
 
@@ -5395,8 +5395,8 @@ module bsg_link_ddr_downstream
   (
     .core_clk_i(core_clk_i),
     .core_link_reset_i(core_link_reset_i),
-    .io_link_reset_i(io_link_reset_i[0]),
-    .io_clk_i(io_clk_i[0]),
+    .io_link_reset_i(io_link_reset_i),
+    .io_clk_i(io_clk_i),
     .io_data_i({ \ch_0_.io_iddr_data_top [7:0], \ch_0_.io_iddr_data_bottom  }),
     .io_valid_i(\ch_0_.io_iddr_v_lo ),
     .core_token_r_o(core_token_r_o[0]),
@@ -5409,10 +5409,10 @@ module bsg_link_ddr_downstream
   bsg_link_iddr_phy_width_p9
   ch_1_iddr_data 
   (
-    .clk_i(io_clk_i[1]),
+    .clk_i(io_clk_i),
     .data_i({ io_valid_i[1:1], io_data_i[15:8] }),
     .data_r_o({ \ch_1_.io_iddr_data_top , \ch_1_.io_iddr_v_lo , \ch_1_.io_iddr_data_bottom  }),
-    .rst(io_link_reset_i[1])
+    .rst(io_link_reset_i)
   );
 
 
@@ -5421,8 +5421,8 @@ module bsg_link_ddr_downstream
   (
     .core_clk_i(core_clk_i),
     .core_link_reset_i(core_link_reset_i),
-    .io_link_reset_i(io_link_reset_i[1]),
-    .io_clk_i(io_clk_i[1]),
+    .io_link_reset_i(io_link_reset_i),
+    .io_clk_i(io_clk_i),
     .io_data_i({ \ch_1_.io_iddr_data_top [7:0], \ch_1_.io_iddr_data_bottom  }),
     .io_valid_i(\ch_1_.io_iddr_v_lo ),
     .core_token_r_o(core_token_r_o[1]),
@@ -5444,7 +5444,6 @@ module bsg_link_ddr_downstream
     .v_o(core_valid_o),
     .yumi_i(core_yumi_i)
   );
-
 
   assign core_sipo_yumi_lo = N0 & core_sipo_ready_lo;
   assign N0 = core_sipo_valid_li[1] & core_sipo_valid_li[0];
