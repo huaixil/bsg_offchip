@@ -27,7 +27,7 @@ void verify_upstream(
   VerilogVerificationTargetGenerator vg(
       {IncludePath},                                         // one include path
       path_to_design_files,                                  // designs
-      "bsg_link_ddr_upstream",                               // top_module_name
+      "bsg_top",                               // top_module_name
       RefrelPath + "ref-rel-var-map-up.json",                // variable mapping
       RefrelPath + "ref-rel-inst-cond-up.json",              // conditions of start/ready
       OutputPath,                                            // output path
@@ -62,7 +62,7 @@ void verify_upstream_child(
   VerilogVerificationTargetGenerator vg(
       {IncludePath},                                         // one include path
       path_to_design_files,                                  // designs
-      "bsg_link_ddr_upstream",                               // top_module_name
+      "bsg_top",                                            // top_module_name
       RefrelPath + "ref-rel-var-map-upchild.json",                // variable mapping
       RefrelPath + "ref-rel-inst-cond-upchild.json",              // conditions of start/ready
       OutputPath,                                            // output path
@@ -98,7 +98,7 @@ void verify_downstream(
   VerilogVerificationTargetGenerator vg(
       {IncludePath},                                         // one include path
       path_to_design_files,                                  // designs
-      "bsg_link_ddr_downstream",                               // top_module_name
+      "bsg_top",                                                // top_module_name
       RefrelPath + "ref-rel-var-map-down.json",                // variable mapping
       RefrelPath + "ref-rel-inst-cond-down.json",              // conditions of start/ready
       OutputPath,                                            // output path
@@ -133,7 +133,7 @@ void verify_downstream_child(
   VerilogVerificationTargetGenerator vg(
       {IncludePath},                                         // one include path
       path_to_design_files,                                  // designs
-      "bsg_link_ddr_downstream",                               // top_module_name
+      "bsg_top",                               // top_module_name
       RefrelPath + "ref-rel-var-map-downchild.json",                // variable mapping
       RefrelPath + "ref-rel-inst-cond-downchild.json",              // conditions of start/ready
       OutputPath,                                            // output path
@@ -151,10 +151,14 @@ int main() {
   // extract the configurations
   std::vector<std::string> upstream_design_files = {
     "bsg_link_ddr_upstream.sv2v.v",
+    "bsg_link_ddr_downstream.sv2v.v",
+    "top.v"
   };
 
   std::vector<std::string> downstream_design_files = {
-    "bsg_link_ddr_downstream.sv2v.v"
+    "bsg_link_ddr_upstream.sv2v.v",
+    "bsg_link_ddr_downstream.sv2v.v",
+    "top.v"
   };
 
   auto vtg_cfg = SetConfiguration();
@@ -164,8 +168,8 @@ int main() {
   BSG_DOWNSTREAM downstream_ila;
 
   //verify_upstream_child(upstream_ila.model, vtg_cfg, upstream_design_files);
-  //verify_upstream(upstream_ila.model, vtg_cfg, upstream_design_files);
-  verify_downstream(downstream_ila.model, vtg_cfg, downstream_design_files);
+  verify_upstream(upstream_ila.model, vtg_cfg, upstream_design_files);
+  //verify_downstream(downstream_ila.model, vtg_cfg, downstream_design_files);
   //verify_downstream_child(downstream_ila.model, vtg_cfg, downstream_design_files);
 
   return 0;

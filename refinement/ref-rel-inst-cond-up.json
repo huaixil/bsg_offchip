@@ -2,7 +2,7 @@
     "instructions": [
       {
         "instruction" : "DATA_IN",
-        "ready signal" : "m1.out_piso.shift_ctr_r",
+        "ready signal" : "m1.upstream.out_piso.shift_ctr_r",
         "max bound": 50
       },
 
@@ -13,7 +13,7 @@
 
       {
         "instruction" : "TOKEN_AND_DATA",
-        "ready signal" : "m1.out_piso.shift_ctr_r",
+        "ready signal" : "m1.upstream.out_piso.shift_ctr_r",
         "max bound": 50
       }
     ],

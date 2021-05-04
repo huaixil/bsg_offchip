@@ -2,13 +2,13 @@
     "models": { "ILA":"m0" , "VERILOG": "m1" },
   
     "state mapping": {
-        "io_valid_out"    : "m1.io_valid_r_o[0]",
-        "io_data_out_ch0" : "m1.io_data_r_o[7:0]",
-        "io_data_out_ch1" : "m1.io_data_r_o[15:8]",
+        "io_valid_out"    : "m1.upstream.io_valid_r_o[0]",
+        "io_data_out_ch0" : "m1.upstream.io_data_r_o[7:0]",
+        "io_data_out_ch1" : "m1.upstream.io_data_r_o[15:8]",
 
         "data_cycle_0"    : "#data0#",
-        "data_cycle_1"    : "m1.out_piso.data_o",
-        "child_valid"     : "~m1.out_piso.ready_and_o",
+        "data_cycle_1"    : "m1.upstream.out_piso.data_o",
+        "child_valid"     : "~m1.upstream.out_piso.ready_and_o",
         "sent_cnt"        : "#sent_counter#",
         "finish_cnt"      : [["__START__", "#finish_counter#"],
                             ["__IEND__",  "#finish_cnt_holder#"]]
@@ -16,8 +16,8 @@
 
     "value-holder" : {
         "data0" :{
-          "cond": "(__START__ || __STARTED__) && m1.out_piso.shift_ctr_r == 0",
-          "val" : "m1.out_piso.data_o",
+          "cond": "(__START__ || __STARTED__) && m1.upstream.out_piso.shift_ctr_r == 0",
+          "val" : "m1.upstream.out_piso.data_o",
           "width": "auto"
         },
 
@@ -32,18 +32,14 @@
         "token_record": {
             "verilog": [
                 "always @(posedge __ILA_I_core_clk) begin",
-                "   if(rst) begin io_token <= 0; token_clk_i <= 0; end",
-                "   else if (random_token) begin",
-                "       io_token <= 1;",
-                "       token_clk_i <= ~token_clk_i;",
+                "   if(rst) token_clk_i <= 0;",
+                "   else begin",
+                "       token_clk_i <= m1.upstream.token_clk_i[0];",
                 "   end",
-                "   else io_token <= 0;",
                 "end"
             ],
 
             "defs" : [
-                ["random_token", 1, "wire"],
-                ["io_token", 1, "reg"],
                 ["token_clk_i", 1 ,"reg"]
             ],
 
@@ -54,18 +50,18 @@
 
         "counter_record":{
             "verilog": [
-                "assign sent_counter = m1.ch_0_sso.pos_credit_ctr.r_counter_r[5:0] + m1.ch_0_sso.neg_credit_ctr.r_counter_r[5:0];",
-                "assign finish_counter = {(m1.ch_0_sso.pos_credit_ctr.w_counter_binary_r_rsync[3:0] + m1.ch_0_sso.neg_credit_ctr.w_counter_binary_r_rsync[3:0]),3'b000};"
+                "assign sent_counter = m1.upstream.ch_0_sso.pos_credit_ctr.r_counter_r[5:0] + m1.upstream.ch_0_sso.neg_credit_ctr.r_counter_r[5:0];",
+                "assign finish_counter = {(m1.upstream.ch_0_sso.pos_credit_ctr.w_counter_binary_r_rsync[3:0] + m1.upstream.ch_0_sso.neg_credit_ctr.w_counter_binary_r_rsync[3:0]),3'b000};"
             ],
             "defs" :[
                 ["sent_counter", 7, "reg"],
                 ["finish_counter", 7, "reg"]
             ],
             "refs" :[
-                "m1.ch_0_sso.pos_credit_ctr.r_counter_r",
-                "m1.ch_0_sso.neg_credit_ctr.r_counter_r",
-                "m1.ch_0_sso.pos_credit_ctr.w_counter_binary_r_rsync",
-                "m1.ch_0_sso.neg_credit_ctr.w_counter_binary_r_rsync"
+                "m1.upstream.ch_0_sso.pos_credit_ctr.r_counter_r",
+                "m1.upstream.ch_0_sso.neg_credit_ctr.r_counter_r",
+                "m1.upstream.ch_0_sso.pos_credit_ctr.w_counter_binary_r_rsync",
+                "m1.upstream.ch_0_sso.neg_credit_ctr.w_counter_binary_r_rsync"
             ]
         },
 
@@ -74,7 +70,7 @@
                 "always @(posedge __ILA_I_core_clk) begin",
                 "    if(rst) begin valid_i <= 0; data_i <=0; end",
                 "    else",
-                "       if(valid_i == 0 || (valid_i == 1 && m1.core_ready_o) ) begin ",
+                "       if(valid_i == 0 || (valid_i == 1 && m1.upstream.core_ready_o) ) begin ",
                 "          valid_i <= random_valid; data_i <= random_data; end",
                 "end"
             ],
@@ -86,40 +82,29 @@
 
             ],
             "refs": [
-                "m1.core_ready_o"
+                "m1.upstream.core_ready_o"
             ]
         }
 
     },
 
     "interface mapping": {
-       
-       "core_clk_i"           :           "core_clk" ,
-       "core_link_reset_i"    :           "**RESET**",
-       "core_data_i"          :           "core_data_in",
-       "core_valid_i"         :           "core_valid_in",
-       "core_ready_o"         :           "**KEEP**",
-
-       "io_clk_i"             :           "**CLOCK**",
-       "io_link_reset_i"      :           "**RESET**",
-       "async_token_reset_i"  :           "**RESET**",
-       
-       "io_clk_r_o"           :           "**KEEP**",
-       "io_data_r_o"          :           "**SO**",
-       "io_valid_r_o"         :           "**SO**",
-
-       "token_clk_i"          :           "**KEEP**"
+        "base_clk"      :      "**KEEP**",
+        "core_clk"      :      "core_clk",
+        "io_clk"        :      "**CLOCK**",
+        "edge_clk_i"    :      "core_clk",
+        "rst"           :      "**RESET**",
+        "data_i"        :      "core_data_in",
+        "valid_i"       :       "core_valid_in",
+        "core_yumi_i"   :       "**KEEP**",
+        "data_o"        :       "**SO**",
+        "valid_o"       :       "**SO**"
     },
   
-    "mapping control":[
-        "m0.io_token == #io_token#",
-        "m1.token_clk_i[0] == #token_clk_i# && m1.token_clk_i[1] == #token_clk_i#"
-    ],
-  
     "assumptions" : [
-        "m1.core_data_i == #data_i#",
-        "m1.core_valid_i == #valid_i#",
-        "sent_counter - finish_counter <= 7'b1000000"
+        "m1.upstream.core_data_i == #data_i#",
+        "m1.upstream.core_valid_i == #valid_i#",
+        "m0.io_token == (m1.upstream.token_clk_i[0] ^ #token_clk_i#)"
       ]
   
 }
