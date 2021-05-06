@@ -6,7 +6,7 @@ analyze -sva  \
 elaborate -top bsg_top
 clock base_clk;
 clock base_clk io_clk 2 1 -both_edges;
-clock base_clk core_clk 4 1
+clock base_clk core_clk 4 1;
 clock base_clk edge_clk_i 4 4;
 reset -expression {rst} {:global_formal_reset} -non_resettable_regs {0};
 
